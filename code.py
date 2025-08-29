@@ -17,7 +17,7 @@ GUILD_ID: Optional[int] = None  # 테스트용 길드(서버) ID 넣으면 빠�
 DATA_FILE = "knowledge.json"
 
 # 권한 추가 (interaction.user.name)
-privileged_users: List[str] = ["lover_hoshino"]
+privileged_users: List[str] = ["adminstrator","discord_name"] # 자기 디스코드 사용자명 넣기
 
 
 
