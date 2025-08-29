@@ -8,9 +8,8 @@ import json
 from dotenv import load_dotenv
 
 
-# =======================
+
 # 기본 설정
-# =======================
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -21,66 +20,15 @@ DATA_FILE = "knowledge.json"
 privileged_users: List[str] = ["lover_hoshino"]
 
 
-# =======================
+
 # 기본(고정) 지식 (가르치기 불가)
-# =======================
+
 
 default_knowledge: Dict[str, str] = {
-    "시로": "제 선생님이셔요!",
-    "시로노": "제 선생님이셔요!",
-    "디스코드": "제 집이랍니다.",
-    "바보": "바보 아니거든요!?",
-    "낮잠": "낮잠자기 좋은곳은 어디일까나~",
-    "호시노": "부르셨어요?",
-    "호시노야": "부르셨어요?",
-    "멍청이": "저는 바보도 멍청이도 아니에요!",
-    "팀얼간이즘": "얼간이들",
-    "팀 얼간이즘": "얼간이들",
-    "넷카마": "넷카마요? ....전 잘 모르겠네요 ㅎㅎ",
-    "여장": "하하 잘 모르겠네요 ^^7",
-    "여장남자": "하하 잘 모르겠네요 ^^7",
-    "여장남": "하하 잘 모르겠네요 ^^7",
-    "블루 아카이브":"블루 아카이브!",
-    "블루아카이브":"블루 아카이브!",
-    "블루 아카":"블루 아카이브!",
-    "블루아카":"블루 아카이브!",
-    "블아":"블루 아카이브!",
-    "파이썬":"저를 구성한 언어에요.",
-    "호루스":"아이언..호루스..",
-    "선생님 해봐":"센세! 오늘도 수고가 많으십니다!",
-    "인공지능":"전 최첨단 인공지능으로 만들어 졌어요!",
-    "ai":"전 최첨단 인공지능으로 만들어 졌어요!",
-    "AI":"전 최첨단 인공지능으로 만들어 졌어요!",
-    "명령어":"/를 사용하여 명령어를 사용해보세요!",
-    "플머":"불...사람..?",
-    "다니엘":"플머!",
-    "플레이머":"불..사람!?",
-    "박다니엘":"다니엘?",
-    "가르치기":"가르치기 명령어는 /가르치기 로 사용하실수 있어요!",
-    "/가르치기":"아니.. 그.. 맞긴 한데요...",
-    "배운내용":"배운내용 명령어는 /배운내용 으로 사용하실수 있어요!",
-    "/배운내용":"아니... 그... 호시노는 빼주실래요..?",
-    "야 /배운내용":"\'야\'도 빼주.. 에휴.. 제가 무슨 말을 하든 안해주시겠죠..",
-    "야 /가르치기":"\'야\'도 빼주.. 에휴.. 제가 무슨 말을 하든 안해주시겠죠..",
-    "크시":"제 모티브가 되신 선배 봇이세요!",
-    "팀크레센도":"크시님을 만드신 분들이 계신곳이랍니다!",
-    "크레센도":"크시님을 만드신 분들이 계신곳이랍니다!",
-    "팀 크레센도":"크시님을 만드신 분들이 계신곳이랍니다!",
-    "호감도":"호감도요? 언젠간 추가 되겠죠?",
-    "봇":"저는 디스코드 봇이랍니다!",
-    "타카나시 호시노":"제 모티브 케릭터에요!",
-    "세준":"시로 본명",
-    "양세준":"시로노 본명",
-    "페른":"시로의 다른이름",
-    "아니 이거 왜 안되냐?":"그걸 내가 어케아는데",
-    "아니 이건 또 왜 되냐?":"뭐 됬으니까 상관 없잖어",
-    "초대 링크":"https://discord.com/oauth2/authorize?client_id=1395193796865556631&permissions=8&integration_type=0&scope=bot+applications.commands",
-    "안녕":"안녕하세요!",
-    "반가워":"반가워요!",
-    "ㅎㅇ":"부르셨어요?"
+    "hi":"hello world",
 }
 
-# =======================
+
 # 데이터 파일 입출력 & 정규화 (길드별 저장)
 # 데이터 표준 형식 (새 포맷):
 # {
@@ -93,7 +41,7 @@ default_knowledge: Dict[str, str] = {
 # 레거시 포맷(전역):
 # { "keyword": [ { "response": "...", "teacher":"..." }, ... ] }
 #  -> 최초 접근 길드로 이관 (옵션)
-# =======================
+
 
 def ensure_data_file():
     if not os.path.exists(DATA_FILE):
@@ -224,9 +172,9 @@ def save_data(data: Dict[str, Dict[str, List[Dict[str, str]]]]):
 learned_data: Dict[str, Dict[str, List[Dict[str, str]]]] = load_data()
 
 
-# =======================
+
 # 봇 초기화
-# =======================
+
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -234,9 +182,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 tree = bot.tree
 
 
-# =======================
 # 헬퍼
-# =======================
 
 def gid_str_from_guild(guild: Optional[discord.Guild]) -> Optional[str]:
     return str(guild.id) if guild else None
@@ -283,10 +229,9 @@ def build_entries_for_user_all_guilds(username: str) -> List[Dict[str, Any]]:
     return entries
 
 
-# =======================
+
 # KnowledgeView: 페이지네이션 + 이전/다음 + 삭제 버튼
 # 한 페이지: 1개의 (guild, keyword, teacher) 항목 (원래 UX 유지)
-# =======================
 
 class KnowledgeView(discord.ui.View):
     def __init__(self, requester: Union[discord.User, discord.Member], entries: List[Dict[str, Any]], per_page: int = 1):
@@ -407,9 +352,8 @@ class KnowledgeView(discord.ui.View):
             await interaction.response.edit_message(embed=self.get_embed(), view=self)
 
 
-# =======================
+
 # 멀티 삭제 메뉴 (취소)
-# =======================
 
 class MultiDeleteView(discord.ui.View):
     def __init__(self, requester_name: str, guild_id_str: str, keyword: str, teacher: str,
@@ -488,9 +432,8 @@ class MultiDeleteView(discord.ui.View):
         self.stop()
 
 
-# =======================
+
 # /커맨드
-# =======================
 
 @tree.command(name="가르치기", description="호시노가 대답할 말을 가르칩니다.")
 @app_commands.describe(가르칠말="가르칠 단어(혹은 문장)", 대답="호시노가 말하게 될 대답")
@@ -567,9 +510,9 @@ async def show_knowledge_command(interaction: discord.Interaction, 유저: Optio
     await interaction.response.send_message(embed=view.get_embed(), view=view, ephemeral=True)
 
 
-# =======================
-# 메시지 처리 (호시노 가르친 단어 호출)
-# =======================
+
+# 메시지 처리 (호시노에게 가르친 단어 호출)
+
 
 @bot.event
 async def on_message(message: discord.Message):
@@ -607,9 +550,7 @@ async def on_message(message: discord.Message):
     await bot.process_commands(message)
 
 
-# =======================
 # 시작 / sync
-# =======================
 
 @bot.event
 async def on_ready():
@@ -626,9 +567,7 @@ async def on_ready():
         print(f"❌ 명령어 동기화 실패: {e}")
 
 
-# =======================
 # 실행
-# =======================
 
 if __name__ == "__main__":
     if not TOKEN:
